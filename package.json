@@ -1,0 +1,20 @@
+{
+  "name": "movielistings",
+  "version": "1.0.0",
+  "description": "Sample project leveraging the themoviedb api to search for movies",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "Ken Naku",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.0",
+    "fetch": "^1.1.0",
+    "fs": "0.0.1-security",
+    "node-fetch": "^2.6.0",
+    "request": "^2.88.0"
+  }
+}
