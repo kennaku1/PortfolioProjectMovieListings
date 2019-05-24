@@ -4,7 +4,6 @@ const router = express.Router();
 
 router.get('/', (req, res) => {
     MovieController.getPopularMovies().then(movies => {
-        console.log('MOVIES: ', movies);
         res.send(movies);
     })
 });
@@ -21,9 +20,10 @@ router.get('/Video', (req, res) => {
     })
 });
 
-router.get('/Search', (req, res) => {
-    MovieController.searchMovies('Scarface').then(movies => {
-        console.log(movies);
+router.post('/Search', (req, res) => {
+    const searchValue = req.body.searchValue;
+    MovieController.searchMovies(searchValue).then(movies => {
+        //console.log(movies);
         res.send(movies);
     })
 });

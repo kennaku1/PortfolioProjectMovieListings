@@ -86,7 +86,7 @@ class MovieService extends RestAPI {
                 )
             )
             .then(response => {
-                console.log(response);
+                resolve(resolveMovieListings(response));
             })
             .catch(err => reject(err));
         });
@@ -114,7 +114,6 @@ class MovieService extends RestAPI {
 }
 
 const resolveMovieListings = ({ page, total_pages, results }) => {
-    console.log('results: ', results);
     const listings = results.map(movie => new MovieListing(movie));
     return {
         listings: listings,
