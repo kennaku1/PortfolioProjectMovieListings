@@ -14,11 +14,26 @@ class MovieListing {
         this.rating = vote_average / 2; //Vote Rating is returning on a scale of 1-10, front end is looking for a double ranging from 0 - 5 (Star Rating System)
     }
 
-    getMovieDetails({ budget, revenue, imdb_id, genres }) {
+    withMovieDetails({ budget, revenue, imdb_id, genres, release_date, tagline, status }) {
+        console.log('getMovieDetails', tagline, status);
         this.budget = budget;
         this.revenue = revenue;
         this.imdbId = imdb_id;
         this.genres = genres.map(genre => genre.name);
+        this.releaseDate = release_date;
+        this.tagline = tagline;
+        this.status = status;
+        return this;
+    }
+
+    withCast({ cast, crew }) {
+        this.cast = cast;
+        this.crew = crew;
+        return this;
+    }
+
+    withRelated({ results }) {
+        this.related = results.map(movie => new MovieListing(movie));
         return this;
     }
 }

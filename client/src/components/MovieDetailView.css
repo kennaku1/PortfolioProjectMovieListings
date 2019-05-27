@@ -1,0 +1,12 @@
+.MovieViewPoster {
+	width: 350px;
+	height: 100%;
+	float: left;
+	margin-right: 15px;
+}
+
+.MovieViewDetails {
+	float: left;
+	height: 100%;
+	width: 500px;
+}

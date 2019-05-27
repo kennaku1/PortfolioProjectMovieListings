@@ -9,22 +9,31 @@ router.get('/', (req, res) => {
 });
 
 router.get('/Detail', (req, res) => {
-    MovieController.getMovieDetails(157433).then(movieDetails => {
-        console.log(movieDetails);
-    });
+    const movieId = req.query.movieId;
+    MovieController.getMovieDetails(movieId).then(movieDetails => {
+        res.send(movieDetails);
+    })
+    .catch(err => console.log('Error: ', err));
 });
 
 router.get('/Video', (req, res) => {
-    MovieController.getMovieVideos(157433).then(videos => {
-        console.log(videos);
+    const movieId = req.query.movieId;
+    MovieController.getMovieVideos(movieId).then(videos => {
+        res.send(videos);
     })
 });
 
-router.post('/Search', (req, res) => {
-    const searchValue = req.body.searchValue;
+router.get('/Search', (req, res) => {
+    const searchValue = req.query.searchValue;
     MovieController.searchMovies(searchValue).then(movies => {
-        //console.log(movies);
         res.send(movies);
+    })
+});
+
+router.get('/People', (req, res) => {
+    const personId = req.query.personId;
+    MovieController.getPersonDetails(personId).then(personDetails => {
+        res.send(personDetails);
     })
 });
 

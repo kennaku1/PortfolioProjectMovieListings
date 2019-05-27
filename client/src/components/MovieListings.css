@@ -4,4 +4,15 @@
 
 .movieListingsHeader {
     width: 100%;
+    justify-content: center;
+}
+
+/*.movieListingsContainer h1 {
+	width: 100%;
+	text-align: center;
+	margin-left: 40px;
+}
+*/
+.ui.rating .active.icon {
+	color: green;
 }

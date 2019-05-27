@@ -18,10 +18,15 @@ const getMovieVideos = movieId => {
     return movieService.getMovieVideos(movieId);
 };
 
+const getPersonDetails = personId => {
+	return movieService.getPersonDetails(personId);
+}
+
 
 module.exports = {
     getPopularMovies: getPopularMovies,
     getMovieDetails: getMovieDetails,
     searchMovies: searchMovies,
-    getMovieVideos, getMovieVideos
+    getMovieVideos, getMovieVideos,
+    getPersonDetails: getPersonDetails
 };

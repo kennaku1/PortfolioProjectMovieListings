@@ -6,13 +6,16 @@ const PATHS = Object.freeze({
     search: 'search',
     popular: 'popular',
     movie: 'movie',
-    video: 'videos'
+    video: 'videos',
+    credits: 'credits',
+    similar: 'similar',
+    person: 'person'
 });
 
 const ENDPOINT = 'https://api.themoviedb.org';
 const APIVERSION = '3';
 
-const buildRequestOptions = (apiKey, local, params) => {
+const buildRequestOptions = (apiKey, local, params = {}) => {
     let base = { 
         api_key: apiKey, 
         language: local 
@@ -57,18 +60,62 @@ class MovieService extends RestAPI {
                 buildPath(PATHS.movie, movieId),
                 buildRequestOptions(
                     MovieDBConfig.apiKey,
-                    this.local,
-                    { 
-                        
-                    }
+                    this.local
                 )
             )
+            .then(response => this.getMovieCast(new MovieListing(response).withMovieDetails(response)))
+            .then(response => this.getRelatedMovies(response))
+            .then(results => resolve(results))
+            .catch(err => reject(err));
+        });
+    }
+    /**
+        @param movie: takes in an instance of a MovieListing
+    **/
+    getMovieCast(movie) {
+        return new Promise((resolve, reject) => {
+            if (!movie || !movie instanceof MovieListing || movie.id === null) reject('Invalid Movie');
+            super.get(
+                buildPath(ENDPOINT, APIVERSION),
+                buildPath(PATHS.movie, movie.id, PATHS.credits),
+                {
+                    api_key: MovieDBConfig.apiKey
+                },
+                {
+                    movie_id: movie.id
+                }
+            )
             .then(response => {
-                resolve(response);
+                resolve(movie.withCast(response));
             })
             .catch(err => reject(err));
-        })
+        });
     }
+
+    /**
+        @param movie: takes in an instance of a MovieListing
+    **/
+    getRelatedMovies(movie, page = 1) {
+        return new Promise((resolve, reject) => {
+            if (!movie || !movie instanceof MovieListing || movie.id === null) reject('Invalid Movie');
+            super.get(
+                buildPath(ENDPOINT, APIVERSION),
+                buildPath(PATHS.movie, movie.id, PATHS.similar),
+                buildRequestOptions(
+                    MovieDBConfig.apiKey,
+                    this.local
+                ),
+                {
+                    movie_id: movie.id,
+                    page: page
+                }                
+            )
+            .then(response => {
+                resolve(movie.withRelated(response));
+            })
+            .catch(err => reject(err));
+        });
+    }    
 
     searchMovies(queryTitle, page = 1, showAdult = false) {
         return new Promise((resolve, reject) => {
@@ -90,6 +137,25 @@ class MovieService extends RestAPI {
             })
             .catch(err => reject(err));
         });
+    }
+
+    getPersonDetails(personId) {
+        return new Promise((resolve, reject) => {
+            super.get(
+                buildPath(ENDPOINT, APIVERSION),
+                buildPath(PATHS.movie, personId, PATHS.person),
+                buildRequestOptions(
+                    MovieDBConfig.apiKey,
+                    this.local,
+                    { 
+                        movie_id: movieId
+                    }
+                )
+            )
+            .then(response => {
+                resolve(response);
+            }); 
+        });        
     }
 
     getMovieVideos(movieId) {
