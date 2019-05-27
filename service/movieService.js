@@ -65,6 +65,7 @@ class MovieService extends RestAPI {
             )
             .then(response => this.getMovieCast(new MovieListing(response).withMovieDetails(response)))
             .then(response => this.getRelatedMovies(response))
+            .then(response => this.getMovieVideos(response))
             .then(results => resolve(results))
             .catch(err => reject(err));
         });
@@ -143,22 +144,25 @@ class MovieService extends RestAPI {
         return new Promise((resolve, reject) => {
             super.get(
                 buildPath(ENDPOINT, APIVERSION),
-                buildPath(PATHS.movie, personId, PATHS.person),
+                buildPath(PATHS.person, personId),
                 buildRequestOptions(
                     MovieDBConfig.apiKey,
                     this.local,
                     { 
-                        movie_id: movieId
+                        person_id: personId
                     }
                 )
             )
             .then(response => {
                 resolve(response);
-            }); 
+            })
+            .catch(err => {
+
+            })
         });        
     }
 
-    getMovieVideos(movieId) {
+    getMovieVideos(movie) {
         return new Promise((resolve, reject) => {
             super.get(
                 buildPath(ENDPOINT, APIVERSION),
@@ -172,7 +176,7 @@ class MovieService extends RestAPI {
                 )
             )
             .then(response => {
-                resolve(response);
+                resolve(movie.withVideos(response));
             }); 
         });
     }

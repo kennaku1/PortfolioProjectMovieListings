@@ -1,3 +1,5 @@
+const ImageBaseURL = 'https://image.tmdb.org/t/p/w500';
+
 export const getPopularMovies = (page = 1) => {
     return new Promise((resolve, reject) => {
         fetch('/Movie', 
@@ -93,6 +95,10 @@ export const getPeopleDetails = (personId) => {
         .catch(err => console.log(err));
     }); 
 
+};
+
+export const getImageURL = imageId => {
+    return [ImageBaseURL, imageId].join('/');
 };
 
 function buildPath(base, options) {

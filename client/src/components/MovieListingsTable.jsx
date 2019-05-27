@@ -47,7 +47,7 @@ export const MovieListingsTable = props => {
                     </Table.Row>
                 </Table.Header>
                 <Table.Body>
-                    {props.movies.map(movie => <ListingRow title={movie.title} rating={movie.rating} description={movie.description} moviePoster={movie.image} id={movie.id}/>)}
+                    {props.movies.map((movie, index )=> <ListingRow key={index} title={movie.title} rating={movie.rating} description={movie.description} moviePoster={movie.image} id={movie.id}/>)}
                 </Table.Body>
             </Table>
         </div>

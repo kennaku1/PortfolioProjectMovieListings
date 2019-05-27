@@ -36,6 +36,10 @@ class MovieListing {
         this.related = results.map(movie => new MovieListing(movie));
         return this;
     }
+
+    withVideos({ results }) {
+        this.videos = results;
+    }
 }
 
 module.exports = MovieListing;
