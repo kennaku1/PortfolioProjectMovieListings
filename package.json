@@ -4,11 +4,11 @@
   "description": "Sample project leveraging the themoviedb api to search for movies",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "client": "npm run start --prefix client",
     "server": "node server.js",
     "start": "concurrently \"npm run server\" \"npm run client\"",
-    "jest": "jest test"
+    "jest": "jest --watchAll"
   },
   "author": "Ken Naku",
   "license": "MIT",
@@ -29,11 +29,7 @@
   },
   "devDependencies": {
     "babel-jest": "^24.8.0",
+    "react-test-renderer": "^16.8.6",
     "jest": "^24.8.0"
-  },
-  "jest": {
-    "testMatch": [
-      "**/test/jest/**/*.js?(x)"
-    ]
   }
 }

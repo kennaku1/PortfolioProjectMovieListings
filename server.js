@@ -6,7 +6,7 @@ const MovieRoutes = require('./routes/movie/MovieRoutes');
 app.use(bodyParser.json());
 app.use('/Movie', MovieRoutes);
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true, limit: '500mb'}));
+app.use(bodyParser.urlencoded());
 
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
