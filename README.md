@@ -14,19 +14,3 @@ Application using an express server and react front end.
 - Clicking on related movies will redirect to the detail view of that movie.
 - Clicking a cast/crew member name renders a modal displaying details of that individual
 
-Movie Listings View
-
-image.png
-
-Movie Detail View
-
-image.png
-
-People Detail View 
-
-image.png
-
-Pagination Support 
-
-image.png
-
