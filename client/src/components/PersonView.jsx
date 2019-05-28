@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Modal, Header } from 'semantic-ui-react';
+import { Modal, Loader } from 'semantic-ui-react';
 import { getPeopleDetails, getImageURL } from '../service/ClientMovieService.js';
 
 export default class PersonView extends Component {
@@ -22,15 +22,16 @@ export default class PersonView extends Component {
             this.setState({
                 person: res
             });
-        });
+        })
+        .catch(err => console.log(err));
     }
 
     render() {
         const person = this.state.person;
-        if (!person) return '';
+        if (!person) return <Loader/>;
         const ageStatement = person && person.deathday ? `${person.birthday} to ${person.deathday}` : `${person.birthday} to Current`;
         return (
-            <Modal.Content scrolling>
+            <Modal.Content inverted scrolling>
                 <p>
                     <h3>{person.name}</h3>
                     <h4>{ageStatement}</h4>

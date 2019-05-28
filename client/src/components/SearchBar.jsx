@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Icon, Segment, Input } from 'semantic-ui-react';
+import { Input } from 'semantic-ui-react';
 
 export default class SearchBar extends Component{
 	constructor(props) {

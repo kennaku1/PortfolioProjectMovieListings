@@ -1,13 +1,8 @@
-const IMAGEURI = 'https://image.tmdb.org/t/p/original';
-const getImagePath = imagePath => {
-    return [IMAGEURI, imagePath].join('');
-};
-
 class MovieListing {
     constructor({ id, poster_path, overview, adult, vote_average, title, video }) {
         this.id = id;
         this.title = title;
-        this.image = getImagePath(poster_path);
+        this.image = poster_path;
         this.description = overview;
         this.isAdult = adult;
         this.hasVideo = video;
@@ -15,14 +10,13 @@ class MovieListing {
     }
 
     withMovieDetails({ budget, revenue, imdb_id, genres, release_date, tagline, status }) {
-        console.log('getMovieDetails', tagline, status);
         this.budget = budget;
         this.revenue = revenue;
         this.imdbId = imdb_id;
         this.genres = genres.map(genre => genre.name);
         this.releaseDate = release_date;
         this.tagline = tagline;
-        this.status = status;
+        this.status = status || 'Unknown';
         return this;
     }
 

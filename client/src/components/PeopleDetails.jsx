@@ -74,15 +74,9 @@ export default class PeopleDetails extends Component {
       }
     });
   }
-
-  getTiles() {
-    if (!this.state.people) return null;
-    return this.state.people.map((person, index) => <PeopleDetailModal key={index} person={person} isCrew={this.state.isCrew} onStart={this.getPersonDetails.bind(this, index)}/>)
-  }
+  
 
   render() {
-    const tiles = this.getTiles();
-    console.log('tiles: ', tiles);
     return (
       <ul>
         {this.state.people.map((person, index) => <PeopleDetailModal key={index} person={person} isCrew={this.state.isCrew} onStart={this.getPersonDetails.bind(this, index)}/>)}

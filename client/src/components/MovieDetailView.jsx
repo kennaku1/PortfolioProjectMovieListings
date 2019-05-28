@@ -1,20 +1,19 @@
 import React, { Component } from 'react';
-import { Segment, Modal, Grid, Label, Rating, Tab } from 'semantic-ui-react';
-import { getMovieDetails } from '../service/ClientMovieService.js';
+import { Modal, Label, Rating, Tab, Loader } from 'semantic-ui-react';
+import { getMovieDetails, getImageURL } from '../service/ClientMovieService.js';
 import PeopleDetails from './PeopleDetails';
 import './MovieDetailView.css';
 
 const SimliarMovies = ({ list, redirect }) => {
 	const rows = list.map(item => <li><a href="void(0);" onClick={(e) => redirect(e, item.id)}>{item.title}</a></li>);
 	return (
-			<ul>
-					{rows}
-			</ul>
+		<ul>
+			{rows}
+		</ul>
 	);
 };
 
-const panes = ( trailers, cast, crew, similiarMovies, redirect ) => {
-	console.log('cast: ', cast)
+const panes = ( cast, crew, similiarMovies, redirect ) => {
 	return [
 		{ menuItem: 'Similiar Movies', render: () => <Tab.Pane key={1} inverted><SimliarMovies list={similiarMovies} redirect={redirect}/></Tab.Pane> },
 		{ menuItem: 'Cast', render: () => <Tab.Pane key={2} inverted> <PeopleDetails people={cast} isCrew={false}/> </Tab.Pane> },
@@ -23,6 +22,43 @@ const panes = ( trailers, cast, crew, similiarMovies, redirect ) => {
 }
 
 const DetailTabs = ({ panes }) => <Tab panes={panes} menu={{ color: 'white', inverted: true, attached: false, tabular: false }} />
+
+const MovieDetailContent = ({ movie, detailPanes }) => {
+	if (!movie) return <Loader/>;
+
+	const poster = movie ? movie.image : null;
+	const genres = movie && movie.genres ? movie.genres.map(genre => <Label as='a' tag color='blue'>{genre}</Label>) : null;	
+	return (
+		<div>
+			<img className="MovieViewPoster" src={getImageURL(poster)} width="350px" height="100%" />
+			<div className="MovieViewDetails">
+				<p>
+					<h2>{movie.title} ({movie.releaseDate})</h2>
+				</p>
+				<p>
+					<h3>{movie.tagline}</h3>
+				</p>
+				<p>
+					{genres}
+				</p>
+				<p>
+					<Label as='a' tag>
+						{movie.status}
+					</Label>
+				</p>
+				<p>
+					<Rating icon='star' rating={movie.rating} maxRating={5} disabled />
+				</p>
+				<p>
+					{movie.description}
+				</p>
+				<p>
+					<DetailTabs panes={detailPanes}/>
+				</p>
+			</div>
+		</div>
+	);	
+}
 
 export default class MovieDetailView extends Component {
 	constructor(props) {
@@ -55,8 +91,7 @@ export default class MovieDetailView extends Component {
 	detailPanes() {
 		const movieDetails = this.state.movieDetails;
 		if (!movieDetails) return;
-		console.log('movieDetails: ', movieDetails);
-		return panes([], movieDetails.cast, movieDetails.crew, movieDetails.related, this.redirect.bind(this));
+		return panes(movieDetails.cast, movieDetails.crew, movieDetails.related, this.redirect.bind(this));
 	}
 
 	render() {
@@ -66,44 +101,11 @@ export default class MovieDetailView extends Component {
 				{this.state.triggerElement}
 			</span>
 		);
-		const poster = movie ? movie.image : null;
-		const releaseDate = movie && movie.releaseDate ? movie.releaseDate : 'Unknown';
-		const title = movie ? movie.title : '';
-		const status = movie && movie.status ? movie.status : 'Unknown';
-		const description = movie ? movie.description : '';
-		const tagline = movie ? movie.tagline : '';
-		const rating = movie && movie.rating ? movie.rating : 0;
-		const genres = movie && movie.genres ? movie.genres.map(genre => <Label as='a' tag color='blue'>{genre}</Label>) : null;
+
 		return (
 			<Modal trigger={trigger} dimmer="blurring" basic closeIcon>
 				<Modal.Header>Movie Details</Modal.Header>
-				<img className="MovieViewPoster" src={poster} width="350px" height="100%" />
-				<div className="MovieViewDetails">
-					<p>
-						<h2>{title} ({releaseDate})</h2>
-					</p>
-					<p>
-						<h3>{tagline}</h3>
-					</p>
-					<p>
-						{genres}
-					</p>
-					<p>
-						<Label as='a' tag>
-							{status}
-						</Label>
-					</p>
-					<p>
-						<Rating icon='star' rating={rating} maxRating={5} disabled />
-					</p>
-					<p>
-						{description}
-					</p>
-					<p>
-						<DetailTabs panes={this.detailPanes()}/>
-					</p>
-				</div>
-
+				<MovieDetailContent movie={movie} detailPanes={this.detailPanes()}/> 
 			</Modal>
 		);
 	}

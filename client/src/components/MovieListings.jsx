@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { Icon, Table, Segment, Header } from 'semantic-ui-react';
-import {getPopularMovies, searchMovies} from '../service/ClientMovieService.js';
-import SearchBar from './SearchBar';
-import {MovieListingsTable} from './MovieListingsTable';
-import './MovieListings.css';
+import { Icon, Segment, Header, Grid } from 'semantic-ui-react';
+import { getPopularMovies, searchMovies } from '../service/ClientMovieService.js';
+import { MovieListingsTable } from './MovieListingsTable';
+
+const POPULAR_MODE = 'POPULAR';
+const SEARCH_MODE = 'SEARCH';
 
 export default class MovieListings extends Component {
     constructor() {
@@ -12,7 +13,9 @@ export default class MovieListings extends Component {
             movies : {},
             isLoading : true,
             searchResults : [],
-            searchValue : ''
+            searchValue : '',
+            activePage: 1,
+            mode : POPULAR_MODE
         };
     }
 
@@ -36,7 +39,20 @@ export default class MovieListings extends Component {
     handleSearch(val) {
         this.isLoading = true;
         searchMovies(val)
-        .then(listings => this.setState({ movies: listings, isLoading: false }))
+        .then(listings => this.setState({ movies: listings, isLoading: false, mode: SEARCH_MODE, searchValue: val }))
+    }
+
+    onPageChange(event, { activePage }) {
+        const { mode, searchValue } = this.state;
+        if (mode === SEARCH_MODE) {
+            this.isLoading = true;
+            searchMovies(searchValue, activePage)
+            .then(listings => this.setState({ movies: listings, isLoading : false, activePage }))
+        } else if (mode === POPULAR_MODE) {
+            this.isLoading = true;
+            getPopularMovies(activePage)
+            .then(listings => this.setState({ movies: listings, isLoading : false, activePage }))
+        }
     }
 
     render() {
@@ -44,16 +60,18 @@ export default class MovieListings extends Component {
         return (
             <Segment inverted textAlign='center'>
                 <Segment inverted textAlign='center'>
-                    <Header as="h1" textAlign='center' inverted>
-                        <Icon name='play' />
-                        <Header.Content>
-                            Movie Listings
-                            <Header.Subheader>Discover movies and watch trailers</Header.Subheader>
-                        </Header.Content>
-                    </Header>
+                    <Grid textAlign='center' columns={1}>
+                        <Header as="h1" textAlign='center' inverted>
+                            <Icon name='play'/>
+                            <Header.Content>
+                                Movie Listings
+                                <Header.Subheader>Discover movies and watch trailers</Header.Subheader>
+                            </Header.Content>
+                        </Header>
+                    </Grid>
                 </Segment>            
                 <Segment inverted loading={this.isLoading} className="movieListingsContainer">
-                    <MovieListingsTable movies={movies} handleSearch={this.handleSearch.bind(this)}/>
+                    <MovieListingsTable movies={movies} handleSearch={this.handleSearch.bind(this)} activePage={this.state.activePage} totalPages={this.state.movies.totalPages} onPageChange={this.onPageChange.bind(this)}/>
                 </Segment>
             </Segment>
         );

@@ -1,24 +1,22 @@
 const ImageBaseURL = 'https://image.tmdb.org/t/p/w500';
 
 export const getPopularMovies = (page = 1) => {
+    const path = page > 1 ? buildPath('/Movie', { pageNumber: page }) : '/Movie';
+
     return new Promise((resolve, reject) => {
-        fetch('/Movie', 
-        {
-            method: "GET"
-        })
+        fetch(path)
         .then(response => response.json())
         .then(listings => {
-            console.log(listings);
             resolve(listings)
         })
-        .catch(err => console.log(err));
+        .catch(err => reject(err));
     });
 
 };
 
 export const searchMovies = (searchValue, page = 1) => {
     return new Promise((resolve, reject) => {
-        if (!searchValue || !page || page < 1) reject('Invalid Search Value');
+        if (!searchValue || page < 1) reject('Invalid Search Value');
         fetch(buildPath('/Movie/Search', 
         {
             pageNumber: page,
@@ -29,10 +27,10 @@ export const searchMovies = (searchValue, page = 1) => {
         })
         .then(response => response.json())
         .then(listings => {
-            console.log(listings);
+            console.log('listings: ', listings);
             resolve(listings)
         })
-        .catch(err => console.log(err));
+        .catch(err => reject(err));
     });
 
 };
@@ -49,30 +47,9 @@ export const getMovieDetails = (movieId) => {
         })
         .then(response => response.json())
         .then(listings => {
-            console.log(listings);
             resolve(listings);
         })
-        .catch(err => console.log(err));
-    }); 
-
-};
-
-export const getMovieTrailers = (movieId) => {
-     return new Promise((resolve, reject) => {
-        if (!movieId) reject('Invalid Movie Id');
-        fetch(buildPath('/Movie/Video', {
-            movieId: movieId
-        }), 
-        {
-            method: "GET",
-            headers:  {'content-type': 'application/json'}
-        })
-        .then(response => response.json())
-        .then(listings => {
-            console.log(listings);
-            resolve(listings);
-        })
-        .catch(err => console.log(err));
+        .catch(err => reject(err));
     }); 
 
 };
@@ -89,10 +66,9 @@ export const getPeopleDetails = (personId) => {
         })
         .then(response => response.json())
         .then(listings => {
-            console.log(listings);
             resolve(listings);
         })
-        .catch(err => console.log(err));
+        .catch(err => reject(err));
     }); 
 
 };

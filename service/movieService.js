@@ -6,7 +6,6 @@ const PATHS = Object.freeze({
     search: 'search',
     popular: 'popular',
     movie: 'movie',
-    video: 'videos',
     credits: 'credits',
     similar: 'similar',
     person: 'person'
@@ -65,7 +64,6 @@ class MovieService extends RestAPI {
             )
             .then(response => this.getMovieCast(new MovieListing(response).withMovieDetails(response)))
             .then(response => this.getRelatedMovies(response))
-            .then(response => this.getMovieVideos(response))
             .then(results => resolve(results))
             .catch(err => reject(err));
         });
@@ -141,6 +139,7 @@ class MovieService extends RestAPI {
     }
 
     getPersonDetails(personId) {
+        if (!personId) reject('Invalid Person');
         return new Promise((resolve, reject) => {
             super.get(
                 buildPath(ENDPOINT, APIVERSION),
@@ -160,25 +159,6 @@ class MovieService extends RestAPI {
 
             })
         });        
-    }
-
-    getMovieVideos(movie) {
-        return new Promise((resolve, reject) => {
-            super.get(
-                buildPath(ENDPOINT, APIVERSION),
-                buildPath(PATHS.movie, movieId, PATHS.video),
-                buildRequestOptions(
-                    MovieDBConfig.apiKey,
-                    this.local,
-                    { 
-                        movie_id: movieId
-                    }
-                )
-            )
-            .then(response => {
-                resolve(movie.withVideos(response));
-            }); 
-        });
     }
 
 }
