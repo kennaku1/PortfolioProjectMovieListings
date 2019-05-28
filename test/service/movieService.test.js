@@ -4,6 +4,8 @@ const service = new MovieService();
 
 const testMovieID = 246655;
 const testMovieTitle = 'X-Men: Apocalypse'
+const testPersonId = 2888;
+const testPersonName = 'Will Smith';
 
 describe('Movie Service & API calls to themoviedb API', () => {
   test('MovieService returned.', () => {
@@ -43,5 +45,14 @@ describe('Movie Service & API calls to themoviedb API', () => {
 			expect(res).toBeDefined()	
 			expect(res.listings).toBeDefined()	
   	})
-	})			
+	})		
+	
+	test('get MovieDB People results', () => {
+		service.getPersonDetails(testPersonId)
+		.then(res => {
+			expect(res).toBeDefined()
+			expect(res.id).toBe(testPersonId)
+			expect(res.name).toBe(testPersonName)
+		})
+	})
 })
