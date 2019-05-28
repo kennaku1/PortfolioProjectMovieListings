@@ -30,6 +30,12 @@ export default class MovieListings extends Component {
         });
     }
 
+    get totalPages() {
+        const { mode, movies } = this.state;
+        if (mode === SEARCH_MODE) return 1;
+        return movies.totalPages;
+    }
+
     componentWillMount() {
         //Get results
         getPopularMovies()
@@ -71,7 +77,7 @@ export default class MovieListings extends Component {
                     </Grid>
                 </Segment>            
                 <Segment inverted loading={this.isLoading} className="movieListingsContainer">
-                    <MovieListingsTable movies={movies} handleSearch={this.handleSearch.bind(this)} activePage={this.state.activePage} totalPages={this.state.movies.totalPages} onPageChange={this.onPageChange.bind(this)}/>
+                    <MovieListingsTable movies={movies} handleSearch={this.handleSearch.bind(this)} activePage={this.state.activePage} totalPages={this.totalPages} onPageChange={this.onPageChange.bind(this)}/>
                 </Segment>
             </Segment>
         );
