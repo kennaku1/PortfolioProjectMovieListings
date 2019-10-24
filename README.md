@@ -1,6 +1,8 @@
 ﻿# PortfolioProjectMovieListings
 Application using an express server and react front end. 
 
+For more Info & screenshots: https://angel.co/projects/972565-sample-project-react-express-application
+
 # Instructions
 1. After cloning the directory, run "npm install", this will install all dependencies 
 2. run "npm start" (note if an issue with react-scripts occurs please run npm install react-scripts to resolve issue)
